@@ -1,36 +1,67 @@
-# winxp一闪启动
-
-#### Description
-{**When you're done, you can delete the content in this README and update the file with details for others getting started with your repository**}
-
-#### Software Architecture
-Software architecture description
-
-#### Installation
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### Instructions
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### Contribution
-
-1.  Fork the repository
-2.  Create Feat_xxx branch
-3.  Commit your code
-4.  Create Pull Request
+# winxp quick boot
 
 
-#### Gitee Feature
+#### Introduction
+This is software written n years ago, open source;
 
-1.  You can use Readme\_XXX.md to support different languages, such as Readme\_en.md, Readme\_zh.md
-2.  Gitee blog [blog.gitee.com](https://blog.gitee.com)
-3.  Explore open source project [https://gitee.com/explore](https://gitee.com/explore)
-4.  The most valuable open source project [GVP](https://gitee.com/gvp)
-5.  The manual of Gitee [https://gitee.com/help](https://gitee.com/help)
-6.  The most popular members  [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+Winxp Flash Start is a software that allows you **WindowsXP**, **Win2003**** to start quickly when booting up**, to solve your problem of installing large-scale software (such as image processing, design, development, database, game Etc.) caused by slow startup problems. Most machines can enter "Welcome" after one lap. With recovery function. When there is no registration, the software will lock your "Registry Editor" and "Group Policy Window", and the "Winodws Quick Start" logo will be added if you are welcome. To restore, press the "Restore" button to restore.
+
+
+
+Features:
+
+ 1. Fast Tianji (**WindowsXP**, **Win2003** system);
+
+ 2. Quick shutdown;
+
+ 3. Recovery;
+
+ 4. Software with automatic update function;
+
+    
+
+Skills:
+
+ 1. The use of windows group policy;
+
+ 4. The registry read and write and restore;
+
+ 5. Lock, unlock, change pictures, etc.;
+
+    
+
+At that time, I took pains to write.
+    
+
+**Code with number counter**: It is provided by a third party (has been cracked), ha~; learning reference
+
+
+
+#### Rely on third-party controls
+
+ AutoUpgraderPro
+
+
+
+#### Instructions for use
+
+Visual operation
+
+![Startup interface](README.assets/%E5%90%AF%E5%8A%A8%E7%95%8C%E9%9D%A2.png)
+
+
+
+
+
+#### Keywords before opening
+
+How to enter the Window interface faster after booting?
+Is there any quick boot software?
+How to quickly turn on and turn off the xp system?
+Is there a quick shutdown method for XP operating system?
+
+
+
+#### Participate in Contribution
+
+ It's a long time and I can't find it anymore.
