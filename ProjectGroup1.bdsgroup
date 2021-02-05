@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+<<<<<<< .mine
+	<PersonalityInfo>
+		<Option>
+			<Option Name="Personality">Default.Personality</Option>
+			<Option Name="ProjectType"></Option>
+			<Option Name="Version">1.0</Option>
+			<Option Name="GUID">{31B22B8C-DD95-4CBE-AC0B-DCE913F9BA2E}</Option>
+		</Option>
+	</PersonalityInfo>
+	<Default.Personality>  <Projects>
+      <Projects Name="EncodeDemo.exe">..\00 2009.1.3开发资料\EncodeDemo算号器\EncodeDemo.bdsproj</Projects>
+      <Projects Name="Targets">EncodeDemo.exe</Projects>
+=======
+  <PersonalityInfo>
+    <Option>
+      <Option Name="Personality">Default.Personality</Option>
+      <Option Name="ProjectType"></Option>
+      <Option Name="Version">1.0</Option>
+      <Option Name="GUID">{FA39D4B1-6059-4740-B037-9F4EFF7B6B6B}</Option>
+    </Option>
+  </PersonalityInfo>
+  <Default.Personality>
+    
+    <Projects>
+      <Projects Name="winstart.exe">winstart.bdsproj</Projects>
+      <Projects Name="EncodeDemo.exe">..\开发WinXPStart参考辅助资料\00 2009.1.3开发资料\EncodeDemo算号器\EncodeDemo.bdsproj</Projects>
+      <Projects Name="Targets">winstart.exe EncodeDemo.exe</Projects>
+>>>>>>> .r20
+    </Projects>
+    <Dependencies/>
+  </Default.Personality>
+</BorlandProject>
