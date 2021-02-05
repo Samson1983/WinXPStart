@@ -7,6 +7,8 @@ winxp一闪启动是一款如何可以让你**WindowsXP**,**Win2003****开机快
 
 
 
+编释器：Delphi7、BDS2007
+
 功能：
 
  1. 快速天机（**WindowsXP**,**Win2003**系统）；

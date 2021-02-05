@@ -8,6 +8,10 @@ Winxp Flash Start is a software that allows you **WindowsXP**, **Win2003**** to 
 
 
 
+Compiler: Delphi7, BDS2007
+
+
+
 Features:
 
  1. Fast Tianji (**WindowsXP**, **Win2003** system);
