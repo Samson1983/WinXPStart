@@ -1,10 +1,10 @@
 object Form3: TForm3
-  Left = 183
-  Top = 230
+  Left = 317
+  Top = 233
+  Width = 647
+  Height = 259
   BorderIcons = [biSystemMenu, biMinimize]
   Caption = #22635#20889#35746#21333
-  ClientHeight = 232
-  ClientWidth = 639
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -28,7 +28,6 @@ object Form3: TForm3
       Top = 20
       Width = 60
       Height = 13
-      Margins.Bottom = 0
       Caption = #20184#27454#37329#39069#65306
     end
     object Label2: TLabel
@@ -36,7 +35,6 @@ object Form3: TForm3
       Top = 104
       Width = 72
       Height = 26
-      Margins.Bottom = 0
       Caption = #20184#27454#20154#30041#35328#65306#13#10#65288#38480'30'#23383#65289
     end
     object Label4: TLabel
@@ -44,7 +42,6 @@ object Form3: TForm3
       Top = 47
       Width = 72
       Height = 13
-      Margins.Bottom = 0
       Caption = #20184#27454#20154#22995#21517#65306
     end
     object Label5: TLabel
@@ -52,7 +49,6 @@ object Form3: TForm3
       Top = 80
       Width = 72
       Height = 13
-      Margins.Bottom = 0
       Caption = #20184#27454#20154#37038#31665#65306
     end
     object Label7: TLabel
@@ -60,7 +56,6 @@ object Form3: TForm3
       Top = 20
       Width = 6
       Height = 13
-      Margins.Bottom = 0
       Caption = '*'
     end
     object Label8: TLabel
@@ -68,7 +63,6 @@ object Form3: TForm3
       Top = 47
       Width = 6
       Height = 13
-      Margins.Bottom = 0
       Caption = '*'
     end
     object Label9: TLabel
@@ -76,7 +70,6 @@ object Form3: TForm3
       Top = 83
       Width = 6
       Height = 13
-      Margins.Bottom = 0
       Caption = '*'
     end
     object Image2: TImage
@@ -865,7 +858,7 @@ object Form3: TForm3
       Width = 121
       Height = 70
       Lines.Strings = (
-        #36719#20214#36141#20080'Winstart')
+        #36719#20214#25424#36192'Winstart')
       TabOrder = 2
     end
     object RzEdit2: TRzEdit
@@ -903,7 +896,6 @@ object Form3: TForm3
       Top = 183
       Width = 284
       Height = 13
-      Margins.Bottom = 0
       Caption = #25552#31034':'#30001#20110#32593#36895#21407#22240','#19981#33021#27491#30830#29983#20135#35746#21333','#20294#28857#20987'"'#37325#35797'"'#12290
     end
     object RzRadioGroup1: TRzRadioGroup

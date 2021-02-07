@@ -1,9 +1,9 @@
 object Form1: TForm1
-  Left = 168
-  Top = 210
+  Left = 330
+  Top = 184
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
-  Caption = 'WinXP'#19968#38378#21551#21160' V1.3'
+  Caption = 'WinXP'#19968#38378#21551#21160' V1.3('#20813#36153')'
   ClientHeight = 360
   ClientWidth = 420
   Color = clBtnFace
@@ -14,6 +14,7 @@ object Form1: TForm1
   Font.Style = []
   OldCreateOrder = False
   Position = poDesktopCenter
+  OnClose = FormClose
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
@@ -43,9 +44,6 @@ object Form1: TForm1
         7C00B8937E00BA957F00BA958000BA968000BB978100BC988200BE9B8500BE9B
         8600BF9D8800C1A08C008E736300}
       Stretch = True
-      ExplicitLeft = 2
-      ExplicitTop = -5
-      ExplicitWidth = 395
     end
     object Image2: TImage
       Left = 0
@@ -434,7 +432,6 @@ object Form1: TForm1
       Top = 11
       Width = 180
       Height = 24
-      Margins.Bottom = 0
       AutoSize = False
       Caption = 'WinXP'#19968#38378#21551#21160
       Font.Charset = GB2312_CHARSET
@@ -450,7 +447,6 @@ object Form1: TForm1
       Top = 6
       Width = 130
       Height = 13
-      Margins.Bottom = 0
       AutoSize = False
       Caption = #29256#26435#25152#26377'    '#20405#26435#24517#31350
       Font.Charset = DEFAULT_CHARSET
@@ -461,14 +457,14 @@ object Form1: TForm1
       ParentFont = False
       Transparent = True
     end
-    object Button5: TButton
-      Left = 327
-      Top = 26
-      Width = 75
+    object Button4: TButton
+      Left = 352
+      Top = 24
+      Width = 49
       Height = 25
-      Caption = '1'#20803#27880#20876
+      Caption = #25424#36192
       TabOrder = 0
-      OnClick = Button5Click
+      OnClick = Button4Click
     end
   end
   object Panel2: TPanel
@@ -484,7 +480,6 @@ object Form1: TForm1
       Top = 243
       Width = 377
       Height = 51
-      Margins.Bottom = 0
       AutoSize = False
       Caption = 
         #25552#31034#65306'1.'#25903#25345'WindowsXP'#65292'Windows2003'#20225#19994#29256#12290#13#10'      2.'#25509#20809#39537#25110#22810#30828#30424#26102#65292#35831#35760#24471#25353'"'#24320#26426#24674#22797'"'#25353#38062#65292 +
@@ -509,7 +504,6 @@ object Form1: TForm1
         Top = 156
         Width = 241
         Height = 26
-        Margins.Bottom = 0
         AutoSize = False
         Caption = #20320#35201#26032#22686#30828#30424#12289#26032#22686#25509#20809#39537#26102#12290#35201#20808#24674#13#22797#65292#25805#20316#31995#32479#25165#33021#25214#21040#12290
         Font.Charset = DEFAULT_CHARSET
@@ -524,7 +518,6 @@ object Form1: TForm1
         Top = 24
         Width = 241
         Height = 13
-        Margins.Bottom = 0
         AutoSize = False
         Caption = #35299#20915#24320#26426#36895#24230#24930#30340#38382#39064#12290
       end
@@ -533,7 +526,6 @@ object Form1: TForm1
         Top = 74
         Width = 241
         Height = 26
-        Margins.Bottom = 0
         AutoSize = False
         Caption = #25552#39640#20851#26426#30340#36895#24230#65292#33258#21160#20851#38381#27809#26377#21709#24212#30340#13#10#31243#24207#24182#20851#26426#12290
       end
@@ -542,7 +534,6 @@ object Form1: TForm1
         Top = 185
         Width = 241
         Height = 26
-        Margins.Bottom = 0
         AutoSize = False
         Caption = #22914#26524#20320#35273#24471#19981#38656#35201#24555#36895#20851#26426#65292#35831#24674#22797#23601#13#10#34892#20102#12290
       end
@@ -582,7 +573,7 @@ object Form1: TForm1
       'WinXP'#19968#38378#21551#21160' Version 1.0'#21253#21547#19979#21015#29305#33394':'#13#10'*'#25903#25345'WindowsXP'#12289'Windows2003'#25805#20316#31995#32479#13#10#13#10'*1' +
       #20803#27880#20876#20351#29992#26399#38480'1'#24180','#26080#21151#33021#38480#21046#13#10#13#10'*9.9'#20803','#26080#38480#20351#29992
     InfoFileURL = 'http://heechenhe.398.cn/winxpstart.inf'
-    VersionDate = '03/09/2009'
+    VersionDate = '06/22/2009'
     VersionDateAutoSet = True
     VersionNumber = '1'
     ShowMessages = [mAskUpgrade, mConnLost, mLostFile, mNoInfoFile, mPasswordRequest]

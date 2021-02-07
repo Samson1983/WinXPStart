@@ -4,7 +4,7 @@ interface
 
 uses
   Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls,Registry,UnitLockConst,HardInfo,ShellAPI,TLHelp32,Unit4,
+  Dialogs, StdCtrls,Registry,UnitLockConst,ShellAPI,TLHelp32,
   ExtCtrls, auHTTP, auAutoUpgrader;
 
   type
@@ -15,7 +15,6 @@ uses
     Image2: TImage;
     Image3: TImage;
     Label1: TLabel;
-    Button5: TButton;
     Panel2: TPanel;
     Label6: TLabel;
     GroupBox1: TGroupBox;
@@ -27,32 +26,24 @@ uses
     Button2: TButton;
     Button3: TButton;
     Label7: TLabel;
+    Button4: TButton;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure FormShow(Sender: TObject);
-    procedure Button7Click(Sender: TObject);
-    procedure Button5Click(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure Button4Click(Sender: TObject);
   private
-    procedure checkFile(sender: tobject);
-    function admin: Boolean;
+
+
     procedure ReQStart(sender: tobject);
     procedure ReCstart(sender: tobject);
 
     { Private declarations }
   public
     procedure Regedit(x, y: Integer);
-    procedure closeReg(HATimeout, WTimeout, AutoET: string);
-    function FileAddShellOrNot(FileName: string): Boolean;
-    procedure LockFile(sExeFilename: string);
-    function StringEncrypt(S: string): string;
-    procedure UnLockFile(sExeFilename: string);
-    procedure CopyFile(FromFile, ToFile: string);
-    function GetFileSize2(filename: string): integer;
-    procedure lockwin(sender: tobject);
-    procedure Unlockwin(sender: tobject);
-    function Regkey: Boolean;
-    function regday: Boolean;  
+    procedure closeReg(HATimeout, WTimeout, AutoET: string);   
+ 
     { Public declarations }
   end;
 
@@ -69,37 +60,10 @@ var
 
 implementation
 
- uses DesHex64, MACAddressInfo, CodeEncDec;
+uses Unit4;
  {$R *.dfm}
 
 
-		//说明加密DLL模块内的函数
-		function RE_GetDllSignature(sUserKey:string; sSignature:PChar):Integer; stdcall;
-    external 'RegEnc.dll';
-
-		function RE_RunItOnStart(iType,iParam:Integer; sProgramID:string; EncodeNum:Integer):Integer; stdcall;
-    external 'RegEnc.dll';
-
-		function RE_GetRegStatus():Integer; stdcall;
-    external 'RegEnc.dll';
-
-		function RE_GetRemainingTimes():Integer; stdcall;
-    external 'RegEnc.dll';
-
- 		function RE_GetRemainingDays():Integer;  stdcall;
-    external 'RegEnc.dll';
-
- 		function RE_Register(sProgramID:string; EncodeNum:Integer; sRegCode:string):Integer; stdcall;
-    external 'RegEnc.dll';
-
- 		function RE_GetSystemID(sSystemID:pchar):Integer; stdcall;
-    external 'RegEnc.dll';
-
- 		function RE_GetRegCode(sSystemID:string; EncodeNum:Integer; sRegCode:PChar):Integer; stdcall;
-    external 'RegEnc.dll';
-
- 		function RE_ClearRegInfo(sProgramID:string; EncodeNum:Integer):Integer; stdcall;
-    external 'RegEnc.dll';
 
 procedure EndProcess(AFileName: string);
 const
@@ -181,6 +145,8 @@ begin
                                     tmppath:='SYSTEM\CurrentControlSet\Control\Class\';
                                       if  OpenKey(tmppath+tmpName,   True)   then
                                       begin
+                                        if  not ValueExists('MasterDeviceType') then
+                                                WriteInteger('MasterDeviceType',3);
                                          if ReadInteger('MasterDeviceType')<>1 then
                                            begin
                                              //以下2句，为是的第一次没有刻键时。把它默认成0“自动检查”
@@ -194,6 +160,9 @@ begin
 
                                            end;
 
+                                        if  not ValueExists('SlaveDeviceType') then
+                                                WriteInteger('SlaveDeviceType',3);
+                                                
                                            if ReadInteger('SlaveDeviceType')<>1 then
                                            begin
                                              //以下2句，为是的第一次没有刻键时。把它默认成0“自动检查”
@@ -230,31 +199,7 @@ begin
       end;
 end;
 procedure TForm1.Button1Click(Sender: TObject);
-var
-
-
-reb:Integer;
-
 begin
-   if day = 0 then
-     begin
-       if (RegStatus<>2)  then
-        Form1.lockwin(sender);
-
-          reb:= RE_GetRegStatus();
-        // reb := 365天过期为1
-       if (reb = 1)  then
-        Form1.lockwin(sender);
-     end;
-
-
-   if day =1 then
-     begin
-      if not Form1.Regkey  then
-        Form1.lockwin(sender);
-     end;
-
-
   //程序实现
 Regedit(1,3);
 
@@ -264,36 +209,13 @@ end;
 
 
 procedure TForm1.Button2Click(Sender: TObject);
-var
-reb:Integer;
 begin
-//检查文件是否被修改
-Form1.checkFile(sender);
-
-   if day = 0 then
-     begin
-       if (RegStatus<>2)  then
-         Form1.Unlockwin(Sender);
-
-          reb:= RE_GetRegStatus();
-        // reb := 365天过期为1
-       if (reb = 1)  then
-        Form1.Unlockwin(Sender);
-     end;
-
-
-   if day =1 then
-     begin
-      if not Form1.Regkey  then
-       Form1.Unlockwin(Sender);
-     end;
-
      //关机恢复
      ReCstart(sender);
         //开机恢复
     ReQStart(sender);
 
-    
+
 end;
 
 procedure TForm1.ReQStart(sender:tobject);
@@ -462,38 +384,9 @@ begin
 end;
 
 procedure TForm1.FormShow(Sender: TObject);
-var
-sSignature:array[0..32] of char;
-RegStatus2 :Integer;
-//type
-//TIntFunc=function(i:integer):integer;stdcall;
-//var
-//Th:Thandle;
-//Tf:TIntFunc;
-//Tp:TFarProc;
 begin
- //动态调用Dll
-//begin
-//ShowMessage(PChar(ExtractFilePath(paramstr(0))+'RegEnc.dll'));
-//Th:=LoadLibrary(PChar(ExtractFilePath(paramstr(0))+'RegEnc.dll')); {装载DLL}
-//if Th>0 then
-//try
-//Tp:=GetProcAddress(Th,PChar('RE_GetDllSignature'));
-//if Tp<>nil
-//then begin
-//Tf:=TIntFunc(Tp);
-// RE_GetDllSignature('sUserKey10151001', @sSignature) ;
-// ShowMessage('HE'+sSignature);
-//end
-//else
-//ShowMessage('getDll函数没有找到');
-//finally
-//FreeLibrary(Th); {释放DLL}
-//end
-//else
-//ShowMessage('RegEnc.dll没有找到');
-//end;
 
+    
 
    // 检查更新
   AutoUpgraderPro1.CheckUpdate;
@@ -514,97 +407,11 @@ begin
         end;
   end;
 
-  Form1.checkFile(sender);
-
-
-        with TRegistry.Create do
-        begin
-         RootKey := HKEY_CURRENT_USER;
-          if OpenKey('Software\Microsoft\Windows\WindowsStart',True) then
-             if ValueExists('day') then
-               Day:= ReadInteger('day');  //按用日期
-        end;
-
-  if Day<>1 then
-   begin
-
-       //不能用下划线
-        RE_GetDllSignature('sUserKey10151001', @sSignature) ;
-          //在程序运行一开始即调用此函数，更新注册状态（已注册/未注册,剩余次数/天数 等）
-        RE_RunItOnStart(2,28,'WindowsQuickStart',10151001);
-//          if ret<>1 then
-//          ShowMessage('');
-        //判断注册状态
-        RegStatus:=RE_GetRegStatus();
-        case RegStatus of
-          0:   Form1.Caption :=Form1.Caption+'[您尚未注册，试用28次，还有'+IntToStr(RE_GetRemainingTimes())+'次]';
-          1:begin
-              MessageBox(Handle, '[您尚未注册，28次试用期已过，请注册!]', '提示信息', MB_OK +
-                MB_ICONINFORMATION);
-                 if not(Assigned(form4)) then
-                form4:=Tform4.Create(Application);
-                 aBol:= True;
-                 Form4.ShowModal;
-
-            end;
-          2:
-            begin
-             RE_RunItOnStart(3,365,'WindowsQuickStart',10151002);
-                  //判断注册状态
-                  RegStatus2:=RE_GetRegStatus();
-                case RegStatus2 of
-                      0: begin
-                         Form1.Caption :=Form1.Caption+'[您已注册1年,还有'+IntToStr(RE_GetRemainingDays())+'天],使用期.';
-                         Button5.Visible :=False;
-                          //不加锁变量
-                          end;
-                      1:begin
-                          MessageBox(Handle, '[您的使用期限已过，请注册!]', '提示信息', MB_OK +
-                            MB_ICONINFORMATION);
-                             if not(Assigned(form4)) then
-                              form4:=Tform4.Create(Application);
-                              aBol:= True;   //关闭主程序
-                             Form4.ShowModal;
-                         end;
-                    2:
-                      begin
-
-                      end;
-                  end;
-            end;
-        end;
-   end;
-
-  if Day = 1 then
-   begin
-     Form1.Regkey;
-   end;
 
 end;
 
 procedure TForm1.Button3Click(Sender: TObject);
-var
-reb:Integer;
 begin
-   if day = 0 then
-     begin
-       if (RegStatus<>2)  then
-        Form1.lockwin(sender);
-
-          reb:= RE_GetRegStatus();
-        // reb := 365天过期为1
-       if (reb = 1)  then
-        Form1.lockwin(sender);
-     end;
-
-
-   if day =1 then
-     begin
-      if not Form1.Regkey  then
-        Form1.lockwin(sender);
-     end;
-
-//closeReg(HATimeout,WKTimeout,AutoET:string);
     closeReg('200','1000','1');
 end;
 
@@ -678,611 +485,17 @@ end;
 
 
 
-procedure TForm1.Button5Click(Sender: TObject);
+procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+ ShellExecute(GetActiveWindow,'open','http://www.wyszg.com/','','',SW_SHOWNORMAL);
+end;
+
+procedure TForm1.Button4Click(Sender: TObject);
 begin
     if not(Assigned(form4)) then
-        form4:=Tform4.Create(Application);  
+        form4:=Tform4.Create(Application);
         Form4.ShowModal;
 
-
-
-
 end;
-
-procedure TForm1.Button7Click(Sender: TObject);
-begin
-end;
-
-
-
-{检查文件是否已加壳}
-function TForm1.FileAddShellOrNot(FileName: string): Boolean;
-var
-  iOpFile: Integer;
-  LockedFile: TLockedFile;
-  FileExt: string;
-  FileAttr: Integer;
-  ctgBol : Boolean;
-begin
-  FileExt := ExtractFileExt(FileName);
-   if StrUpper(PChar(FileExt)) <> '.ctg'   then
-   begin
-     ctgBol := True;
-   end;
-
- if not ctgBol then
-  {如果不是可执行文件}
-  if StrUpper(PChar(FileExt)) <> '.EXE'   then
-  begin
-    Application.MessageBox(PChar(FileName+'文件不是EXE文件'), '提示', MB_OK + MB_ICONINFORMATION);
-    exit;
-  end;
-  FileAttr := FileGetAttr(FileName);
-  {如果文件属性是只读属性}
-  if   FileAttr and faReadOnly > 0 then
-  begin
-    {设置文件属性}
-    if   FileSetAttr(FileName,faArchive)<>0   then
-    begin
-      Application.MessageBox(PChar('设置'+FileName+'文件的属性出错!'), '提示', MB_OK + MB_ICONINFORMATION);
-      exit;
-    end;
-  end;
-  {打开待加壳或脱壳的文件}
-  iOpFile := FileOpen(FileName, fmOpenRead);
-  try
-    {定位到加密结构}
-    FileSeek(iOpFile, -SizeOf(LockedFile), soFromEnd);
-    {读密码等信息}
-    FileRead(iOpFile, LockedFile, SizeOf(LockedFile));
-    {检查标志，判断是否已加壳}
-    if LockedFile.Flag = CFlag then
-    begin
-      Result := True;
-    end
-    else
-      begin
-         Result := False;
-      end;
-  finally
-    FileClose(iOpFile);
-  end;
-end;
-
-{加壳}
-procedure tform1.LockFile(sExeFilename: string);
-var
-  FsName, FtName, FbName, FCode,FileExt : string;
-  iTargetFile, iSourceFile: Integer;
-  MyBuf: array[0..MaxBufferSize - 1] of Char;
-  LockedFile: TLockedFile;
-  NumRead, NumWritten: Integer;
-  bSuccessed: Boolean;
-begin
-   if Length(GetIdeSerialNumber)<= 14 then
-   sPassword:= GetIdeSerialNumber;
-
-  FsName := sExeFilename;{被加壳的文件名}
-
-    FileExt := ExtractFileExt(FsName);
-   if StrUpper(PChar(FileExt)) = '.CTG'   then
-   begin
-     sPassword:= 'Windows_start';
-   end;
-
-  FbName := FsName + '.TMP';   {被加壳文件的备份文件名}
-  {附加代码的文件名}
-  FCode := ExtractFilePath(paramstr(0))+'Shell.ctg';
-  if not fileexists(FCode)   then
-    raise exception.create(FCode+'文件没找到.');
-
-  iSourceFile := FileOpen(FsName, fmOpenRead or fmShareDenyNone);
-  try
-    with LockedFile do
-    begin
-      Flag := CFlag;{自定义的标志}
-      Name := ExtractFileName(FsName);{文件名}
-      Caption := '';{标题，保留没有使用}
-      Password := StringEncrypt(sPassword);{密码}
-      AdditionalCodeLen := GetFileSize2(FCode);{附加代码的长度}
-    end;
-    {临时文件是在被加壳文件名前加"__"}
-    FtName := ExtractFilePath(FsName) + '__' + LockedFile.Name;
-    CopyFile(FCode, FtName);{先拷贝附加代码}
-
-    {在附加代码之后写被加壳文件}
-    bSuccessed := False;
-    iTargetFile := FileOpen(FtName, fmOpenReadWrite);
-    try
-      {定位至目标文件的末尾}
-      FileSeek(iTargetFile, 0, soFromEnd);
-      repeat
-        NumRead := FileRead(iSourceFile, MyBuf, SizeOf(MyBuf));
-        NumWritten := FileWrite(iTargetFile, MyBuf, NumRead);
-      until (NumRead = 0) or (NumWritten <> NumRead);
-      {最后写上密码等信息}
-      FileWrite(iTargetFile, LockedFile, SizeOf(LockedFile));
-      bSuccessed := True;
-    //  Application.MessageBox('文件加密完成.', '提示', MB_OK + MB_ICONINFORMATION);
-    finally
-      FileClose(iTargetFile);
-    end;
-  finally
-    FileClose(iSourceFile);
-  end;
-  if bSuccessed then
-  begin
-    {删除被加壳的文件}
-    DeleteFile(FsName);
-    {把临时文件重命名为被加壳的文件}
-    RenameFile(FtName, FsName);
-  end;
-
-end;
-
-{自定义的加密运算，对密码进行简单的加密}
-function tform1.StringEncrypt(S: string): string;
-var
-  i: Byte;
-begin
-  for i := 1 to Length(S)   do
-      S[i] := Char(i or $75 xor ord(S[i]));
-  Result := S;
-end;
-
-{脱壳}
-procedure tform1.UnLockFile(sExeFilename: string);
-var
-  FsName, FtName,FileExt : string;
-  iSourceFile, iTargetFile: Integer;
-  NumRead, NumWritten:   Integer;
-  MyBuf: array[0..MaxBufferSize - 1] of Byte;
-  LockedFile: TLockedFile;
-  bSuccessed: Boolean;
-begin
-  if Length(GetIdeSerialNumber)<= 14 then
-    sPassword:= GetIdeSerialNumber;
-
-
-  bSuccessed := False;
-  with Form1 do
-  begin
-    FsName := sExeFilename;{已加壳的文件名}
-
-    FileExt := ExtractFileExt(FsName);
-   if StrUpper(PChar(FileExt)) = '.CTG'   then
-   begin
-     sPassword:= 'Windows_start';
-   end;
-
-    iSourceFile := FileOpen(FsName, fmOpenRead or fmShareDenyNone);
-    try
-      {定位到密码等信息的结构}
-      FileSeek(iSourceFile, -SizeOf(LockedFile), soFromEnd);
-      {读取密码等信息}
-      FileRead(iSourceFile, LockedFile, SizeOf(LockedFile));
-      {如果密码正确}
-      if LockedFile.Password = StringEncrypt(sPassword) then
-      begin
-        {临时文件是在已加壳文件名前加"__"}
-        FtName := ExtractFilePath(FsName) + '__' + LockedFile.Name;
-        iTargetFile := FileCreate(FtName);{创建临时文件}
-        try
-          {定位到加壳前原文件的起始位置}
-          FileSeek(iSourceFile, LockedFile.AdditionalCodeLen,
-             soFromBeginning);
-          {把属于原文件的内容拷贝到临时文件中}
-          repeat
-            NumRead := FileRead(iSourceFile, MyBuf, SizeOf(MyBuf));
-            NumWritten := FileWrite(iTargetFile, MyBuf, NumRead);
-          until (NumRead = 0) or (NumWritten <> NumRead);
-          bSuccessed := True;
-    //      Application.MessageBox('文件解密完成.', '提示', MB_OK + MB_ICONINFORMATION);
-        finally
-          {最后SizeOf(LockedFile)字节是密码等信息,不需要读取到临时文件中}
-          FileSeek(iTargetFile, -SizeOf(LockedFile), soFromEnd);
-          SetEndOfFile(iTargetFile);
-          FileClose(iTargetFile);
-        end;
-      end else
-      begin
-    //    Application.MessageBox('密码不正确.', '提示', MB_OK + MB_ICONINFORMATION);
-      end;
-    finally
-      FileClose(iSourceFile);
-    end;
-    if bSuccessed then
-    begin
-      {删除已加壳的文件}
-      DeleteFile(FsName);
-      {把临时文件改为已加壳}
-      RenameFile(FtName, FsName);
-    end;
-
-  end;
-end;
-
-
-
-procedure TForm1.CopyFile(FromFile, ToFile: string);
-var
-  OpStruc: TSHFileOpStruct;
-  FromBuf, ToBuf: packed array[0..MaxBufferSize - 1] of char;
-begin
-  fillchar(frombuf, sizeof(frombuf), 0);
-  fillchar(tobuf, sizeof(tobuf), 0);
-  StrpCopy(frombuf, fromfile);
-  StrpCopy(tobuf, tofile);
-  with OpStruc do
-  begin
-    wnd := handle;
-    wFunc := FO_COPY;
-    pfrom := @frombuf;
-    pto := @tobuf;
-    fFlags := FOF_SILENT or FOF_NOCONFIRMATION;
-    fAnyOperationsAborted := false;
-    hNameMappings := nil;
-    lpszProgressTitle := nil;
-  end;
-  {拷贝文件Shell操作}
-  ShFileOperation(OpStruc);
-end;
-
-{取文件的大小}
-function TForm1.GetFileSize2(filename:string):integer;
-var
-  sr:TSearchRec;
-begin
-  if (findfirst(filename, faAnyfile and not faDirectory, sr)<>0) then result := 0
-  else result := sr.size;
-  findclose(sr);
-end;
-
-
-
-procedure  TForm1.lockwin(sender : tobject);
-var loacCfg: string;
-begin
-    //检查管理员权限
-  if not Form1.admin then
-   begin
-    MessageBox(Handle, '没有管理员权限,等申请到权限再做!', '错误', MB_OK + 
-      MB_ICONSTOP);
-      
-    Close;
-   end;
-
-    //检查文件是否被修改
-   Form1.checkFile(sender);
-
-        // 启动画面
-       if VerStr ='Microsoft Windows XP'then
-        begin
-            loacCfg := ExtractFilePath(paramstr(0))+'logonui.ctg';
-
-            if FileAddShellOrNot(loacCfg) then
-               Form1.UnLockFile(loacCfg);  //脱壳
-
-            if FileExists(loguiDcache) then
-               begin
-              RenameFile(loguiDcache, RenloguiDcache);
-          //      ShowMessage('a');
-              CopyFile(ExtractFilePath(paramstr(0))+'logonui.ctg',loguiDcache);
-               end;
-            if FileExists(logui) then
-            begin
-               RenameFile(logui,Renlognui);
-          //       ShowMessage('a');
-               CopyFile(ExtractFilePath(paramstr(0))+'logonui.ctg',logui);
-            end;
-
-            if not FileAddShellOrNot(loacCfg) then
-              Form1.LockFile(loacCfg);  //加壳
-          end;
-
-        //杀进程
-      EndProcess('regedit.exe');
-      EndProcess('mmc.exe');
-
-      //加壳mmc
-      if  FileExists(sDllcahe) then   //查找Dllcahe下的mmc
-        begin
-        if not FileAddShellOrNot(sDllcahe) then{检查是否已加壳}
-        LockFile(sDllcahe);
-        end;
-      if  FileExists(sSysFileName) then   //查找System32下的mmc
-        begin
-        if not FileAddShellOrNot(sSysFileName) then{检查是否已加壳}
-        LockFile(sSysFileName);
-        end;
-        if FileExists(sCFilename) then   //查不到windows 下的 mmc
-        begin
-       if not FileAddShellOrNot(sCFilename) then{检查是否已加壳}
-          LockFile(sCFilename);
-        end;
-
-       //加壳regedit
-      if  FileExists(sDllcaheReg) then
-        begin
-        if not FileAddShellOrNot(sDllcaheReg) then
-        LockFile(sDllcaheReg);
-        end;
-      if  FileExists(sSysFileNameReg) then
-        begin
-        if not FileAddShellOrNot(sSysFileNameReg) then
-        LockFile(sSysFileNameReg);
-        end;
-        if FileExists(sCFilenameReg) then
-        begin
-       if not FileAddShellOrNot(sCFilenameReg) then
-          LockFile(sCFilenameReg);
-        end;
-      //加壳regedit32
-      if  FileExists(sDllcaheReg32) then
-        begin
-        if not FileAddShellOrNot(sDllcaheReg32) then
-        LockFile(sDllcaheReg32);
-        end;
-      if  FileExists(sSysFileNameReg32) then
-        begin
-        if not FileAddShellOrNot(sSysFileNameReg32) then
-        LockFile(sSysFileNameReg32);
-        end;
-        if FileExists(sCFilenameReg32) then
-        begin
-       if not FileAddShellOrNot(sCFilenameReg32) then
-          LockFile(sCFilenameReg32);
-        end;
-
-
-        //GPO加锁注意:先加注册表,再加mmc
-        form2.LockRegClick(Self);
-        form2.LockMMCClick(Self);
-
-end;
-
-
-procedure TForm1.Unlockwin(sender: tobject);
- begin
-    //杀进程
-    EndProcess('regedit.exe');
-    EndProcess('mmc.exe');
-
-    //GPO解锁注意:先解MMC,再解注册表
-    form2.UnLockRegClick(Self);
-
-    form2.UnLockMMCClick(Self);
-
-  //{脱壳} mmc
-  if FileExists(sDllcahe) then
-  begin
-    if  FileAddShellOrNot(sDllcahe) then{检查是否已加壳}
-      {脱壳}
-      UnLockFile(sDllcahe);
-  end;
-
-  if FileExists(sSysFileName) then
-  begin
-     if  FileAddShellOrNot(sSysFileName) then{检查是否已加壳}
-      {脱壳}
-      UnLockFile(sSysFileName);
-  end;
-
-    if FileExists(sCFilename) then
-  begin
-     if FileAddShellOrNot(sCFilename) then{检查是否已加壳}
-      {脱壳}
-      UnLockFile(sCFilename);
-  end;
-
-  // regedit
-  if FileExists(sDllcaheReg) then
-  begin
-    if  FileAddShellOrNot(sDllcaheReg) then{检查是否已加壳}
-      {脱壳}
-      UnLockFile(sDllcaheReg);
-  end;
-
-  if FileExists(sSysFileNameReg) then
-  begin
-     if  FileAddShellOrNot(sSysFileNameReg) then{检查是否已加壳}
-      {脱壳}
-      UnLockFile(sSysFileNameReg);
-  end;
-
-    if FileExists(sCFilenameReg) then
-  begin
-     if FileAddShellOrNot(sCFilenameReg) then{检查是否已加壳}
-      {脱壳}
-      UnLockFile(sCFilenameReg);
-  end;
-
-  // mmc
-  if FileExists(sDllcaheReg32) then
-  begin
-    if  FileAddShellOrNot(sDllcaheReg32) then{检查是否已加壳}
-      {脱壳}
-      UnLockFile(sDllcaheReg32);
-  end;
-
-  if FileExists(sSysFileNameReg32) then
-  begin
-     if  FileAddShellOrNot(sSysFileNameReg32) then{检查是否已加壳}
-      {脱壳}
-      UnLockFile(sSysFileNameReg32);
-  end;
-
-    if FileExists(sCFilenameReg32) then
-  begin
-     if FileAddShellOrNot(sCFilenameReg32) then{检查是否已加壳}
-      {脱壳}
-      UnLockFile(sCFilenameReg32);
-  end;
-
-// 启动画面
-   if VerStr ='Microsoft Windows XP'then
-    begin
-      if FileExists(RenloguiDcache) then
-         begin
-         DeleteFile(loguiDcache);
-         RenameFile( RenloguiDcache,loguiDcache);
-         end;
-      if FileExists(logui) then
-      begin
-         DeleteFile(logui);
-         RenameFile(Renlognui,logui);
-      end;
-    end;
-end;
-
-
-function  TForm1.Regkey:Boolean;
-var
-sSignature:array[0..32] of char;
-sSystemID:array[0..9] of char;
-ret :Integer;
-userkey : string;
-
-// 二种加密
-  TempResult: string;
-  TempLen: Cardinal;
-  edt1 : string;
-  edtkey: string;
-begin
-     ret:= RE_GetDllSignature('sUserKeyDay1015_1001', @sSignature) ;
-     if ret<>0 then
-       close;
-
-       //读注册表
-          with TRegistry.Create do
-          begin
-           RootKey := HKEY_CURRENT_USER;
-            if OpenKey('Software\Microsoft\Windows\WindowsStart',True) then
-              begin
-                 if ValueExists('StartUserkey') then
-                   userkey := ReadString('StartUserkey');
-              CloseKey;
-              Button5.Visible :=False;
-              end;
-          end;
-     		RE_GetSystemID(@sSystemID);
-        edt1   := GetIdeSerialNumber + 'David' + GetMACAddress();
-        edtkey := sSystemID;
-        TempLen := DESEncryptStrToHex(PAnsiChar(edt1), PAnsiChar(edtKey),
-          nil, 0);
-        SetLength(TempResult, TempLen);
-        DESEncryptStrToHex(PAnsiChar(edt1), PAnsiChar(edtKey),
-          PAnsiChar(TempResult), TempLen);
-
-      // machstr := Encrypt(TempResult); //产生2次密文
-
-
-       if Decrypt(Encrypt(TempResult))= userkey then
-       begin
-         Result := True;
-       end
-       else
-          begin
-              Result := False;
-               if not(Assigned(form4)) then
-                form4:=Tform4.Create(Application);
-                aBol:= True;
-               Form4.ShowModal;
-
-
-             end;
-end;
-
-function TForm1.regday:Boolean;
-begin
-
-    Result := True;
-end;
-
-procedure TForm1.checkFile(sender: tobject);
-begin
- shellF :=ExtractFilePath(paramstr(0))+'Shell.ctg';
-logouiF :=ExtractFilePath(paramstr(0))+'logonui.ctg';
-
-  if FileExists(shellf) and  FileExists(logouif) then   //查找System32下的mmc
-  begin
-//
-// if not FileAddShellOrNot(shellf) then{检查是否已加壳}
-//       LockFile(shellf);
-//
-// if not FileAddShellOrNot(logouiF)then{检查是否已加壳}
-//    LockFile(logouiF);
-
-
-    // 有加壳为未被用户修改,
-    // 无加壳为被用户修改
- if not FileAddShellOrNot(shellF) then
-      begin
-         ShowMessage(shellf+'文件不正确,请重新安装!');
-         Close;
-      end;
-
- if not FileAddShellOrNot(logouiF) then
-      begin
-         ShowMessage(logouiF+'文件不正确,请重新安装!');
-         Close;
-      end;
-
- end
- else
- begin
-  MessageBox(Handle, 'Shell.ctg与logonui.ctg文件不存在!', '提示信息', MB_OK + MB_ICONSTOP);
-  Close;
-end;
-end;
-
-
-
-function TForm1.admin:Boolean;
-Const 
-  SECURITY_NT_AUTHORITY: TSIDIdentifierAuthority = (value: (0, 0, 0, 0, 0, 5)); 
-  SECURITY_BUILTIN_DOMAIN_RID = $00000020; 
-  DOMAIN_ALIAS_RID_ADMINS = $00000220;
-var
-hAccessToken: THandle;
-ptgGroups: PTokenGroups;
-dwInfoBufferSize: DWORD;
-psidAdministrators: PSID;
-x: Integer;
-bSuccess: BOOL;
-begin
- Result := False;
-  bSuccess := OpenThreadToken(GetCurrentThread, TOKEN_QUERY, True,
-  hAccessToken); 
-  if not bSuccess then
-  begin 
-      if GetLastError = ERROR_NO_TOKEN then 
-          bSuccess := OpenProcessToken(GetCurrentProcess, TOKEN_QUERY, 
-          hAccessToken); 
-  end;
-  if bSuccess then 
-  begin 
-      GetMem(ptgGroups, 1024); 
-      bSuccess := GetTokenInformation(hAccessToken, TokenGroups, 
-      ptgGroups, 1024, dwInfoBufferSize); 
-      CloseHandle(hAccessToken);
-      if bSuccess then
-      begin
-           AllocateAndInitializeSid(SECURITY_NT_AUTHORITY, 2,
-           SECURITY_BUILTIN_DOMAIN_RID, DOMAIN_ALIAS_RID_ADMINS,0, 0, 0, 0, 0, 0,psidAdministrators);
-    {$R-}
-    for x := 0 to ptgGroups.GroupCount - 1 do
-          if EqualSid(psidAdministrators, ptgGroups.Groups[x].Sid) then
-          begin
-              Result := True;
-              Break;
-          end;
-     {$R+}
-    FreeSid(psidAdministrators);
-    end;
-   FreeMem(ptgGroups);
-end;
-end;
-
 
 end.

@@ -1,10 +1,10 @@
 object Form4: TForm4
-  Left = 183
-  Top = 269
+  Left = 335
+  Top = 220
+  Width = 575
+  Height = 146
   BorderIcons = [biSystemMenu]
-  Caption = #36719#20214#27880#20876
-  ClientHeight = 281
-  ClientWidth = 589
+  Caption = #25424#36192#31383#21475
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,114 +20,18 @@ object Form4: TForm4
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 589
-    Height = 281
+    Width = 567
+    Height = 119
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    object Panel3: TPanel
-      Left = 0
-      Top = 0
-      Width = 589
-      Height = 145
-      Align = alTop
-      TabOrder = 0
-      object Label4: TLabel
-        Left = 24
-        Top = 36
-        Width = 40
-        Height = 13
-        Margins.Bottom = 0
-        Caption = #26426#22120#30721':'
-      end
-      object Label5: TLabel
-        Left = 24
-        Top = 63
-        Width = 40
-        Height = 13
-        Margins.Bottom = 0
-        Caption = #27880#20876#30721':'
-      end
-      object Label1: TLabel
-        Left = 70
-        Top = 11
-        Width = 414
-        Height = 13
-        Margins.Bottom = 0
-        AutoSize = False
-      end
-      object Label2: TLabel
-        Left = 24
-        Top = 11
-        Width = 40
-        Height = 13
-        Margins.Bottom = 0
-        Caption = #29305#24449#30721':'
-      end
-      object Edit1: TEdit
-        Left = 70
-        Top = 35
-        Width = 414
-        Height = 21
-        TabOrder = 0
-        Text = 'Sample Text'
-      end
-      object Edit2: TEdit
-        Left = 70
-        Top = 62
-        Width = 414
-        Height = 21
-        TabOrder = 1
-      end
-      object Button4: TButton
-        Left = 497
-        Top = 60
-        Width = 75
-        Height = 23
-        Caption = #27880#20876
-        TabOrder = 2
-        OnClick = Button4Click
-      end
-      object Button2: TButton
-        Left = 408
-        Top = 101
-        Width = 75
-        Height = 25
-        Caption = #35299#38500#27880#20876
-        TabOrder = 3
-        Visible = False
-        OnClick = Button2Click
-      end
-      object RzRadioGroup1: TRzRadioGroup
-        Left = 24
-        Top = 89
-        Width = 273
-        Height = 50
-        Caption = #36873#25321#27880#20876
-        Columns = 2
-        Items.Strings = (
-          '1'#20803#20351#29992#26399#20026'1'#24180
-          #26080#38480#20351#29992','#26368#39640#20215'9.9'#20803)
-        TabOrder = 4
-        OnChanging = RzRadioGroup1Changing
-      end
-      object Button1: TButton
-        Left = 497
-        Top = 101
-        Width = 75
-        Height = 25
-        Caption = #22635#20889#35746#21333
-        TabOrder = 5
-        OnClick = Button1Click
-      end
-    end
     object Panel2: TPanel
       Left = 0
-      Top = 145
-      Width = 589
-      Height = 136
+      Top = 0
+      Width = 567
+      Height = 119
       Align = alClient
-      TabOrder = 1
+      TabOrder = 0
       object Image2: TImage
         Left = 206
         Top = 6
@@ -1080,30 +984,39 @@ object Form4: TForm4
           '1e451d4.htm?nekot=g%2Cnbsxu2dfnztgk2i1230575332313'
       end
       object Label3: TLabel
-        Left = 24
-        Top = 6
-        Width = 155
-        Height = 122
-        Margins.Bottom = 0
+        Left = 16
+        Top = 8
+        Width = 177
+        Height = 65
         AutoSize = False
+        Caption = '    WinXP'#19968#38378#21551#21160#26159#19968#27454#20813#36153#13#10#36719#20214','#20320#21487#21521#20316#32773#25903#20184'1'#20803#34920#31034#13#10#25903#25345'QQ:289355319'#12290
         Font.Charset = DEFAULT_CHARSET
-        Font.Color = clBlue
+        Font.Color = clRed
         Font.Height = -11
         Font.Name = 'MS Sans Serif'
         Font.Style = []
         ParentFont = False
       end
+      object Button1: TButton
+        Left = 97
+        Top = 77
+        Width = 75
+        Height = 25
+        Caption = #32593#38134
+        TabOrder = 0
+        OnClick = Button1Click
+      end
     end
   end
   object Timer1: TTimer
     Interval = 500
-    Left = 142
-    Top = 4
+    Left = 350
+    Top = 12
   end
   object Timer2: TTimer
     Interval = 500
     OnTimer = Timer2Timer
-    Left = 182
-    Top = 4
+    Left = 278
+    Top = 12
   end
 end
